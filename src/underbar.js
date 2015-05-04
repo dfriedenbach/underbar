@@ -338,6 +338,16 @@
   // input array. For a tip on how to make a copy of an array, see:
   // http://mdn.io/Array.prototype.slice
   _.shuffle = function(array) {
+    // This implementation does not guarantee that the elements are reordered.
+    // Therefore, it fails the third test case 1/6 of the time.
+    var result = [];
+    var temp = array.slice();
+    while(temp.length > 0) {
+      var i = Math.floor(Math.random() * temp.length);
+      result.push(temp[i]);
+      temp.splice(i, 1);
+    }
+    return result;
   };
 
 
