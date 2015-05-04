@@ -294,6 +294,20 @@
   // already computed the result for the given argument and return that value
   // instead if possible.
   _.memoize = function(func) {
+    var results = {};
+    return function() {
+      // Calling String() on the arguments object produces '[object Arguments]'
+      var args = [];
+      // So we convert it to an array first
+      _.each(arguments, function(value) {
+        args.push(value);
+      });
+      var key = String(args);
+      if(! (key in results)) {
+        results[key] = func.apply(this, arguments);
+      }
+      return results[key];
+    };
   };
 
   // Delays a function for the given number of milliseconds, and then calls
