@@ -227,11 +227,12 @@
   //     bla: "even more stuff"
   //   }); // obj1 now contains key1, key2, key3 and bla
   _.extend = function(obj) {
+    // arguments object does not support slicing; using _.each would be awkward
     for(var i = 1; i < arguments.length; i++) {
       if(typeof arguments[i] === "object") {
-        for(var key in arguments[i]) {
-          obj[key] = arguments[i][key];
-        }
+        _.each(arguments[i], function(value, key){
+          obj[key] = value;
+        });
       }
     }
     return obj;
