@@ -375,6 +375,43 @@
   // of that string. For example, _.sortBy(people, 'name') should sort
   // an array of people by their name.
   _.sortBy = function(collection, iterator) {
+    var rank;
+    var n = collection.length;
+    if(typeof iterator === 'string') {
+      rank = function(value) {
+        return value[iterator];
+      };
+    } else {
+      rank = iterator;
+    }
+    var rankedArray = _.map(collection, function(value) {
+      return {'item': value, 'rank': rank(value)};
+    });
+    var getRank = function(index) {
+      return rankedArray[index]['rank'];
+    }
+    // Bottom-Up Merge Sort
+    for(var width = 1; width < n; width *= 2) {
+      var temp = [];
+      for(var i = 0; i < n; i += width * 2) {
+        // Using L to avoid l/1 ambiguity, R for consistency
+        var L = i;
+        var R = Math.min(i + width, n);
+        var end = Math.min(i + 2 * width, n);
+        var middle = R;
+        for(var j = L; j < end; j++) {
+          if(L < middle && (R >= end || getRank(R) === undefined || getRank(L) <= getRank(R))) {
+            temp.push(rankedArray[L]);
+            L++;
+          } else {
+            temp.push(rankedArray[R]);
+            R++;
+          }
+        }
+      }
+      rankedArray = temp;
+    }
+    return _.pluck(rankedArray, 'item');
   };
 
   // Zip together two or more arrays with elements of the same index
