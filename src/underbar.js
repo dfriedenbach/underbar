@@ -458,6 +458,40 @@
   // Takes an arbitrary number of arrays and produces an array that contains
   // every item shared between all the passed-in arrays.
   _.intersection = function() {
+    var n = arguments.length;
+    if(n < 2) {
+      return arguments[0];
+    }
+    var tallies = [];
+    var intersects = {};
+    var result = [];
+    for(var i = 0; i < n; i++) {
+      tallies.push({})
+      _.each(arguments[i], function(value) {
+        if(tallies[i][value] === undefined) {
+          tallies[i][value] = 0;
+        }
+        tallies[i][value]++;
+      });
+    }
+    _.each(arguments[0], function(value) {
+      if(intersects[value] === undefined) {
+        var totals = [];
+        for(var i = 0; i < n; i++) {
+          if(tallies[i][value] === undefined) {
+            tallies[i][value] = 0;
+          }
+          totals.push(tallies[i][value]);
+        }
+        var intersect = Math.min.apply(this, totals);
+        intersects[value] = intersect;
+        while(intersect > 0) {
+          result.push(value);
+          intersect--;
+        }
+      }
+    });
+    return result;
   };
 
   // Take the difference between one array and a number of other arrays.
