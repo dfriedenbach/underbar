@@ -497,6 +497,24 @@
   // Take the difference between one array and a number of other arrays.
   // Only the elements present in just the first array will remain.
   _.difference = function(array) {
+    if(arguments.length < 2) {
+      return array;
+    } else {
+      var results = [];
+      var others = [];
+      for(var i = 1; i < arguments.length; i++) {
+        others.push(arguments[i]);
+      }
+      _.each(array, function(value) {
+        var diff = _.every(others, function(collection) {
+          return ! _.contains(collection, value);
+        });
+        if(diff) {
+          results.push(value);
+        }
+      });
+      return results;
+    }
   };
 
   // Returns a function, that, when invoked, will only be triggered at most once
