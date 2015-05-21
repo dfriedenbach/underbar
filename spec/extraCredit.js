@@ -131,7 +131,7 @@
         setTimeout(fn, 199);
         clock.tick(200);
 
-        expect(callback).to.have.been.calledTwice;
+        expect(callback).to.have.been.calledThrice;
       });
     });
   });

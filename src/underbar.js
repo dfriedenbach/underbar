@@ -523,5 +523,29 @@
   //
   // Note: This is difficult! It may take a while to implement.
   _.throttle = function(func, wait) {
+    var throttled = false;
+    var queued = false;
+    var args;
+    
+    var dethrottle = function() {
+      if(queued) {
+        func.apply(this, args);
+        queued = false;
+        setTimeout(dethrottle, wait);
+      } else {
+        throttled = false;
+      }
+    }
+    
+    return function() {
+      if(throttled) {
+        queued = true;
+        args = arguments;
+      } else {
+        func.apply(this, arguments);
+        throttled = true;
+        setTimeout(dethrottle, wait);
+      }
+    }
   };
 }());
